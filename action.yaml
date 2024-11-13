@@ -1,0 +1,25 @@
+name: "SSH Remote Commands"
+description: "Executing remote ssh commands"
+author: "Bo-Yi Wu"
+inputs:
+  host:
+    description: "SSH host address."
+    default: localhost
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set GitHub Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+    - name: Run entrypoint.sh
+      run: entrypoint.sh
+      shell: bash
+      env:
+        INPUT_HOST: ${{ inputs.host }}
+
+branding:
+  icon: "terminal"
+  color: "gray-dark"
