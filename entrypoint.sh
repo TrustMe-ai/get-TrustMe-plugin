@@ -7,4 +7,5 @@ set -o pipefail
 export FLAVOUR='github'
 
 echo "======= CLI Version ======="
-echo "==========================="
+echo "===========$(GITHUB_TOKEN)================"
+echo "===========$(INPUT_HOST)================"
