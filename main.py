@@ -4,11 +4,14 @@ import subprocess
 
 print(sys.argv)
 
-command = '/app/dist/main'
+path = sys.argv[1]
+
+command = f'/app/dist/main {path}'
 result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
 if result.returncode != 0:
     print(result.stderr)
+    sys.exit(1)
 
 results = json.loads(result.stdout)
 
