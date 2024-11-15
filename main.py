@@ -32,5 +32,5 @@ print(results)
 s = 0
 for k, v in results['results'].items():
     s += v
-if s > high_threshold:
+if s > int(high_threshold):
     exit(1)
