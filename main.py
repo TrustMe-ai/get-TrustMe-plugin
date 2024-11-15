@@ -18,4 +18,4 @@ if result.returncode != 0:
 
 # results = json.loads(result.stdout)
 
-print(results)
+# print(results)
