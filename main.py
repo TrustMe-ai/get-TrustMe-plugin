@@ -9,7 +9,9 @@ def list_dirs_and_files(path):
 
 print(sys.argv)
 
-path = sys.argv[1]
+# path = sys.argv[1]
+high_threshold = sys.argv[2]
+path = '.'
 
 print(list_dirs_and_files(path))
 
@@ -25,5 +27,10 @@ if result.returncode != 0:
     sys.exit(1)
 
 # results = json.loads(result.stdout)
-
 # print(results)
+
+# s = 0
+# for k, v in results['results'].items():
+#     s += v
+# if s > high_threshold:
+#     exit(1)

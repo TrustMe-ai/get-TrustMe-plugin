@@ -16,6 +16,11 @@ inputs:
     description: "Path to the code"
     required: false
     default: "${{ github.workspace }}" # Set default to the workspace path
+  fail-if-high-more-than:
+    description: "Path to the code"
+    required: false
+    default: '0' # Set default to the workspace path
+
 
 runs:
   # using: "composite"
@@ -34,6 +39,7 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.path }}
+    - ${{ inputs.fail-if-high-more-than }}
 
 
 branding:
