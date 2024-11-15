@@ -1,3 +1,5 @@
+print('how are you')
+
 import json
 import subprocess
 
