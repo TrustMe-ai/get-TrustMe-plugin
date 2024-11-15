@@ -10,10 +10,12 @@ command = f'/app/dist/main {path}'
 result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
 print("exit code", result.returncode)
+print("exit code", result.stdout)
+
 if result.returncode != 0:
     print(result.stderr)
     sys.exit(1)
 
-results = json.loads(result.stdout)
+# results = json.loads(result.stdout)
 
 print(results)
