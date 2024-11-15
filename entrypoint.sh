@@ -1,5 +1,5 @@
 #!/bin/sh -l
 
 echo "Hello $1"
-./dist/main
+/app/dist/main
 

@@ -1,6 +1,8 @@
 # Container image that runs your code
 FROM python:3.10
 
+WORKDIR /app/
+
 # ================================
 # trivy
 # ================================
