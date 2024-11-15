@@ -1,11 +1,11 @@
 import sys
 import json
 import subprocess
-from pathlib import Path
+import os
 
 def list_dirs_and_files(path):
-    return [(entry.name, "Directory" if entry.is_dir() else "File") for entry in Path(path).iterdir()]
-
+    return [(entry, "Directory" if os.path.isdir(os.path.join(path, entry)) else "File")
+            for entry in os.listdir(path)]
 
 print(sys.argv)
 
