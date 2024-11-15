@@ -26,11 +26,11 @@ if result.returncode != 0:
     print(result.stderr)
     sys.exit(1)
 
-# results = json.loads(result.stdout)
-# print(results)
+results = json.loads(result.stdout)
+print(results)
 
-# s = 0
-# for k, v in results['results'].items():
-#     s += v
-# if s > high_threshold:
-#     exit(1)
+s = 0
+for k, v in results['results'].items():
+    s += v
+if s > high_threshold:
+    exit(1)
