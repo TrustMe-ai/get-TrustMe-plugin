@@ -9,6 +9,7 @@ path = sys.argv[1]
 command = f'/app/dist/main {path}'
 result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
+print("exit code", result.returncode)
 if result.returncode != 0:
     print(result.stderr)
     sys.exit(1)
