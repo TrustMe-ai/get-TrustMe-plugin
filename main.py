@@ -13,6 +13,7 @@ print(sys.argv)
 high_threshold = sys.argv[2]
 path = '.'
 
+print('cwd', os.getcwd())
 print(list_dirs_and_files(path))
 
 command = f'/app/dist/main {path}'
