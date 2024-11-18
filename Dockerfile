@@ -28,4 +28,5 @@ COPY ./dist/ ./dist/
 COPY main.py ./main.py
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["python", "main.py"]
+# ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["python", "/app/main.py"]

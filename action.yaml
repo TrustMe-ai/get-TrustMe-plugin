@@ -8,10 +8,15 @@ author: "TrustMe.ai"
 #     default: localhost
 
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
+  path:
+    description: "Path to the code"
+    required: false
+    default: "${{ github.workspace }}" # Set default to the workspace path
+  fail-if-high-more-than:
+    description: "Path to the code"
+    required: false
+    default: '0' # Set default to the workspace path
+
 
 runs:
   # using: "composite"
@@ -29,7 +34,8 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.path }}
+    - ${{ inputs.fail-if-high-more-than }}
 
 
 branding:
