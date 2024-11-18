@@ -43,3 +43,5 @@ if results['total']['MEDIUM'] > int(mid_threshold):
     exit(1)
 if results['total']['LOW'] > int(low_threshold):
     exit(1)
+
+os.environ['GITHUB_OUTPUT'] = str(result.stdout)
