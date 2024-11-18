@@ -8,10 +8,6 @@ author: "TrustMe.ai"
 #     default: localhost
 
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
   path:
     description: "Path to the code"
     required: false
