@@ -3,7 +3,6 @@ import json
 import subprocess
 import os
 
-
 def list_dirs_and_files(path):
     return [
         (entry,
@@ -12,15 +11,18 @@ def list_dirs_and_files(path):
     ]
 
 
+
 print(sys.argv)
 
 # path = sys.argv[1]
+
 path = '.'
 high_threshold = sys.argv[2]
 mid_threshold = sys.argv[3]
 low_threshold = sys.argv[4]
 
 print('cwd', os.getcwd())
+
 print(list_dirs_and_files(path))
 
 command = f'/app/dist/main {path}'
@@ -36,6 +38,7 @@ if result.returncode != 0:
 
 results = json.loads(result.stdout)
 print(results)
+
 
 if results['total']['HIGH'] > int(high_threshold):
     exit(1)
