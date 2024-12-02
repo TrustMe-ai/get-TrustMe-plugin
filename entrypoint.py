@@ -25,7 +25,7 @@ print('cwd', os.getcwd())
 
 print(list_dirs_and_files(path))
 
-command = f'python src/main.py {path}'
+command = f'python /engine/src/main.py {path}'
 print(command)
 result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
