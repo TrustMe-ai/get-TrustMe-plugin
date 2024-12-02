@@ -40,7 +40,7 @@ runs:
   #     env:
   #       INPUT_HOST: ${{ inputs.host }}
   using: 'docker'
-  image: 'ghcr.io/trustme-ai/scan-engine:latest'
+  image: 'docker://ghcr.io/trustme-ai/scan-engine:latest'
   args:
     - ${{ inputs.path }}
     - ${{ inputs.fail-if-high-more-than }}
