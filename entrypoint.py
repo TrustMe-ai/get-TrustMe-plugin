@@ -33,21 +33,33 @@ low_threshold = validate_integer(sys.argv[4], "fail-if-low-more-than")
 
 print('cwd', os.getcwd())
 
+
+print(f"Current working directory: {os.getcwd()}")
+print(f"Scanning path: {path}")
+print("Listing files and directories:")
 print(list_dirs_and_files(path))
 
 command = f'python /engine/src/main.py {path}'
 print(command)
 result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
-print("exit code", result.returncode)
-print("exit code", result.stdout)
+print("returncode :- ", result.returncode)
+print("stdout :- ", result.stdout)
 
 if result.returncode != 0:
     print(result.stderr)
     sys.exit(1)
 
-results = json.loads(result.stdout)
-print(results)
+
+try:
+    results = json.loads(result.stdout)
+    print("Scan results:", json.dumps(results, indent=4))
+except json.JSONDecodeError:
+    print("Error: Failed to parse JSON output from the scanner.")
+    print("Raw output:", result.stdout)
+    sys.exit(1)
+# results = json.loads(result.stdout)
+# print(results)
 
 if results['total']['HIGH'] > high_threshold:
     print(f"Error: High vulnerabilities exceed the threshold ({high_threshold}).")
@@ -59,4 +71,6 @@ if results['total']['LOW'] > low_threshold:
     print(f"Error: Low vulnerabilities exceed the threshold ({low_threshold}).")
     exit(1)
 
-os.environ['GITHUB_OUTPUT'] = str(result.stdout)
+# os.environ['GITHUB_OUTPUT'] = str(result.stdout)
+os.environ['GITHUB_OUTPUT'] = json.dumps(results)
+print("Script completed successfully.")
