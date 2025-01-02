@@ -13,11 +13,11 @@ inputs:
     required: false
     default: "${{ github.workspace }}" # Set default to the workspace path
   fail-if-high-more-than:
-    description: "fail if high vulnerability is more than a specific limit"
+    description: "fail if high vulnerability is more than a specific limit (must be an integer)."
     required: false
     default: '0' # Set default to the workspace path
   fail-if-medium-more-than:
-    description: "fail if medium vulnerability is more than a specific limit"
+    description: "fail if medium vulnerability is more than a specific limit (must be an integer)."
     required: false
     default: '0' # Set default to the workspace path
   fail-if-low-more-than:
