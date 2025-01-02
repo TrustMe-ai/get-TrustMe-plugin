@@ -49,12 +49,14 @@ if result.returncode != 0:
 results = json.loads(result.stdout)
 print(results)
 
-
-if results['total']['HIGH'] > int(high_threshold):
+if results['total']['HIGH'] > high_threshold:
+    print(f"Error: High vulnerabilities exceed the threshold ({high_threshold}).")
     exit(1)
-if results['total']['MEDIUM'] > int(mid_threshold):
+if results['total']['MEDIUM'] > mid_threshold:
+    print(f"Error: Medium vulnerabilities exceed the threshold ({mid_threshold}).")
     exit(1)
-if results['total']['LOW'] > int(low_threshold):
+if results['total']['LOW'] > low_threshold:
+    print(f"Error: Low vulnerabilities exceed the threshold ({low_threshold}).")
     exit(1)
 
 os.environ['GITHUB_OUTPUT'] = str(result.stdout)
