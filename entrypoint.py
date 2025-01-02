@@ -15,11 +15,21 @@ def list_dirs_and_files(path):
 print(sys.argv)
 
 # path = sys.argv[1]
+def validate_integer(value, name):
+    try:
+        return int(value)
+    except ValueError:
+        print(f"Error: {name} must be an integer. Provided value: '{value}'")
+        sys.exit(1)
 
 path = '.'
-high_threshold = sys.argv[2]
-mid_threshold = sys.argv[3]
-low_threshold = sys.argv[4]
+# high_threshold = sys.argv[2]
+# mid_threshold = sys.argv[3]
+# low_threshold = sys.argv[4]
+
+high_threshold = validate_integer(sys.argv[2], "fail-if-high-more-than")
+mid_threshold = validate_integer(sys.argv[3], "fail-if-medium-more-than")
+low_threshold = validate_integer(sys.argv[4], "fail-if-low-more-than")
 
 print('cwd', os.getcwd())
 
