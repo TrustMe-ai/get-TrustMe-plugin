@@ -21,7 +21,7 @@ inputs:
     required: false
     default: '0' # Set default to the workspace path
   fail-if-low-more-than:
-    description: "fail if low vulnerability is more than a specific limit (integer expected)."
+    description: "fail if low vulnerability is more than a specific limit (must be an integer)."
     required: false
     default: '0' # Set default to the workspace path
 
