@@ -65,7 +65,8 @@ result = subprocess.run(
     text=True,
     cwd='/app',
     env={
-        "SERVER_TYPE": "QA",
+        **os.environ,
+        "SERVER_TYPE": "PROD",
     },
 )
 
