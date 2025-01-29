@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=ghcr.io/trustme-ai/scan-engine:develop
-ARG SERVER_TYPE=DEV
+ARG BASE_IMAGE=ghcr.io/trustme-ai/scan-engine:latest
+ARG SERVER_TYPE=PROD
 
 FROM ${BASE_IMAGE} as base
 

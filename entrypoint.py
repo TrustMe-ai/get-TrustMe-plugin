@@ -45,12 +45,6 @@ mid_threshold = validate_integer(sys.argv[3], "fail-if-medium-more-than")
 low_threshold = validate_integer(sys.argv[4], "fail-if-low-more-than")
 token = sys.argv[5]
 
-os.environ.setdefault('SERVER_TYPE', 'QA')
-print('server type', os.environ.get('SERVER_TYPE'))
-print(f"Current working directory: {os.getcwd()}")
-print(f"Scanning path: {path}")
-print("Listing files and directories:")
-print(list_dirs_and_files(path))
 
 GITHUB_REPOSITORY = os.environ.get('GITHUB_REPOSITORY')
 GITHUB_REF_NAME = os.environ.get('GITHUB_REF_NAME')
