@@ -2,10 +2,12 @@ name: "lorem"
 description: "lorem"
 author: "TrustMe.ai"
 
+
 # inputs:
 #   host:
 #     description: "SSH host address."
 #     default: localhost
+
 
 inputs:
   path:
