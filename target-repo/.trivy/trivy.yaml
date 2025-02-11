@@ -1,0 +1,199 @@
+rules:
+  - id: trustme-ai-secret
+    category: general
+    title: Sensitive Information
+    severity: HIGH
+    regex: (?i)("|')?(password|accesskey|secretkey|access_key|secret_key|api_key)("|')?\s*[:=]\s*("|')?([^"'\s,]+)("|')?
+    allow-rules:
+      - id: skip-python
+        description: skip python files
+        path: .*\.py
+      - id: skip-js
+        description: skip js files
+        path: .*\.js
+      - id: skip-ts
+        description: skip ts files
+        path: .*\.ts
+      - id: skip-csv
+        description: skip csv files
+        path: .*\.csv
+      - id: skip-go
+        description: skip go files
+        path: .*\.go
+  - id: trustme-ai-secret-general
+    category: general
+    title: Sensitive Information
+    severity: MEDIUM
+    regex: (?i)("|')?(username|userid|user|secret)("|')?\s*[:=]\s*("|')?([^"'\s,]+)("|')?
+    allow-rules:
+      - id: skip-python
+        description: skip python files
+        path: .*\.py
+      - id: skip-js
+        description: skip javascript files
+        path: .*\.js
+      - id: skip-ts
+        description: skip ts files
+        path: .*\.ts
+      - id: skip-csv
+        description: skip csv files
+        path: .*\.csv
+      - id: skip-go
+        description: skip go files
+        path: .*\.go
+  - id: new_relic-secret-key
+    category: general
+    title: New Relic secret key
+    severity: HIGH
+    regex: (?i)(new_relic_license_key|new_relic_api_key|new_relic_admin_api_key)("|')?\s*[:=]\s*("|')?([^"'\s,]+)("|')?
+    allow-rules:
+      - id: skip-python
+        description: skip python files
+        path: .*\.py
+      - id: skip-js
+        description: skip js files
+        path: .*\.js
+      - id: skip-ts
+        description: skip ts files
+        path: .*\.ts
+      - id: skip-csv
+        description: skip csv files
+        path: .*\.csv
+      - id: skip-go
+        description: skip go files
+        path: .*\.go
+  - id: redis-secret-key
+    category: general
+    title: Redis secret key
+    severity: HIGH
+    regex: (?i)(redis_api_key|redis_admin_api_key|redis_user_name|redis_password)("|')?\s*[:=]\s*("|')?([^"'\s,]+)("|')?
+    allow-rules:
+      - id: skip-python
+        description: skip python files
+        path: .*\.py
+      - id: skip-ts
+        description: skip ts files
+        path: .*\.ts
+      - id: skip-csv
+        description: skip csv files
+        path: .*\.csv
+      - id: skip-go
+        description: skip go files
+        path: .*\.go
+  - id: trustme-ai-secret-source-python
+    category: general
+    title: Sensitive Information
+    severity: MEDIUM
+    path: .*\.py
+    regex: (?i)(username|secret|secret_key|secretkey|password|user_name|redis_password|new_relic_license_key|api_key|access_key)\s*[=]\s*("|')+([^"'\s,]+)("|')
+  - id: trustme-ai-secret-source-js
+    category: general
+    title: Sensitive Information
+    severity: MEDIUM
+    path: .*\.js
+    regex: (?i)(username|secret|secret_key|secretkey|password|user_name|redis_password|new_relic_license_key|api_key|access_key)\s*[=]\s*("|')+([^"'\s,]+)("|')
+  - id: trustme-ai-secret-source-ts
+    category: general
+    title: Sensitive Information
+    severity: MEDIUM
+    path: .*\.ts
+    regex: (?i)(username|secret|secret_key|secretkey|password|user_name|redis_password|new_relic_license_key|api_key|access_key)\s*[=]\s*("|')+([^"'\s,]+)("|')
+    allow-rules:
+      - id: skip-type-declared-file
+        description: skip type files
+        path: .*\types.ts
+  - id: trustme-ai-secret-source-go
+    category: general
+    title: Sensitive Information
+    severity: MEDIUM
+    path: .*\.go
+    regex: (?i)(var\s+)?(password|username|secret_key|secretkey|secret|redis_password|new_relic_license_key|api_key|access_key)\s*(string\s+)?(= |:=)\s*("|')+([^"'\s,]+)("|')
+enable-builtin-rules:
+  - aws-access-key-id
+  - aws-account-id
+  - aws-secret-access-key
+  - github-pat
+  - github-oauth
+  - github-app-token
+  - github-refresh-token
+  - github-fine-grained-pat
+  - gitlab-pat
+  - hugging-face-access-token
+  - private-key
+  - shopify-token
+  - slack-access-token
+  - stripe-publishable-token
+  - stripe-secret-token
+  - pypi-upload-token
+  - gcp-service-account
+  - heroku-api-key
+  - slack-web-hook
+  - twilio-api-key
+  - age-secret-key
+  - facebook-token
+  - twitter-token
+  - adobe-client-id
+  - adobe-client-secret
+  - alibaba-access-key-id
+  - alibaba-secret-key
+  - asana-client-id
+  - asana-client-secret
+  - atlassian-api-token
+  - bitbucket-client-id
+  - bitbucket-client-secret
+  - beamer-api-token
+  - clojars-api-token
+  - contentful-delivery-api-token
+  - databricks-api-token
+  - discord-api-token
+  - discord-client-id
+  - discord-client-secret
+  - doppler-api-token
+  - dropbox-api-secret"
+  - dropbox-short-lived-api-token
+  - dropbox-long-lived-api-token
+  - duffel-api-token
+  - dynatrace-api-token
+  - easypost-api-token
+  - fastly-api-token
+  - finicity-client-secret
+  - finicity-api-token
+  - flutterwave-public-key
+  - flutterwave-enc-key
+  - frameio-api-token
+  - gocardless-api-token
+  - grafana-api-token
+  - hashicorp-tf-api-token
+  - hubspot-api-token
+  - intercom-api-token
+  - intercom-client-secret
+  - ionic-api-token
+  - jwt-token
+  - linear-api-token
+  - linear-client-secret
+  - lob-api-key
+  - lob-pub-api-key
+  - mailchimp-api-key
+  - mailgun-token
+  - mailgun-signing-key
+  - mapbox-api-token
+  - messagebird-api-token
+  - messagebird-client-id
+  - new-relic-user-api-key
+  - new-relic-user-api-id
+  - new-relic-browser-api-token
+  - npm-access-token
+  - planetscale-password
+  - planetscale-api-token
+  - postman-api-token
+  - pulumi-api-token
+  - rubygems-api-token
+  - sendgrid-api-token
+  - sendinblue-api-token
+  - shippo-api-token
+  - linkedin-client-secret
+  - linkedin-client-id
+  - twitch-api-token
+  - typeform-api-token
+  - dockerconfig-secret
+disable-allow-rules:
