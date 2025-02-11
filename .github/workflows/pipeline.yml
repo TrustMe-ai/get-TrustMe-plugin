@@ -1,0 +1,198 @@
+name: Build and Push Docker Image
+
+# Trigger conditions
+on:
+  # # push:
+  # #   branches:
+  # #     - dev
+
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - qa
+  #     - develop
+  #   types: [closed]
+
+
+  workflow_dispatch:
+    inputs:
+      BASE_IMAGE:
+        description: 'base images to use for plugin'
+        required: true
+        default: 'ghcr.io/trustme-ai/scan-engine:develop'
+        type: choice
+        options:
+          - ghcr.io/trustme-ai/scan-engine:develop
+          - ghcr.io/trustme-ai/scan-engine:qa
+      SERVER_TYPE:
+        description: 'which backend env to connect to'
+        required: true
+        default: 'DEV'
+        type: choice
+        options:
+          - DEV
+          - QA
+
+      TARGET_REPO:
+        description: "Target repository to sync changes"
+        required: true
+        default: "TrustMe-ai/get-TrustMe-plugin"
+        type: string
+      TARGET_BRANCH:
+        description: "Branch in target repo"
+        required: true 
+        default: "dev-check"
+        type: string
+
+
+env:
+  IMAGE_NAME: test-trustme-plugin
+
+jobs:
+
+  bump-version:
+    # trigger-on-merge:
+    # if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set version type based on branch
+        id: version-type
+        run: |
+          # Detect the branch where the workflow is running
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "VERSION_TYPE=minor" >> $GITHUB_ENV
+          else
+            echo "VERSION_TYPE=build" >> $GITHUB_ENV
+          fi
+
+      - name: Bumping version
+        id: set-version
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          pip install --upgrade bumpversion2
+          bumpversion --allow-dirty $VERSION_TYPE
+          VERSION=$(cat VERSION.txt)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "::set-output name=version::${VERSION}"
+
+          # Commit and push the updated version file
+
+          git add VERSION.txt .bumpversion.cfg
+          git commit -m "Bump version to ${VERSION}"
+          git push
+
+
+  push:
+    runs-on: ubuntu-latest
+    needs: bump-version
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        env:
+          VERSION: ${{ needs.bump-version.outputs.version }}
+        run: |
+          echo "Building Docker image"
+
+          # Fetch branch name
+          BRANCH=$(echo "${{ github.ref_name }}" | tr '/' '_')
+          BRANCH=$(echo "$BRANCH" | sed 's/^main$/latest/')
+          echo "BRANCH=$BRANCH"
+
+          docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}" --build-arg  BASE_IMAGE=${{ inputs.BASE_IMAGE }} --build-arg SERVER_TYPE=${{ inputs.SERVER_TYPE }}
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Tag and Push Docker Image
+        env:
+         VERSION: ${{ needs.bump-version.outputs.version }}
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+
+          # Convert IMAGE_ID to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          echo "IMAGE_ID=$IMAGE_ID"
+          echo "VERSION=$VERSION"
+
+          # Tag Docker image with version
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+
+          # Fetch branch name
+          BRANCH=$(echo "${{ github.ref_name }}" | tr '/' '_')
+          BRANCH=$(echo "$BRANCH" | sed 's/^main$/latest/')
+          echo "BRANCH=$BRANCH"
+
+          # Tag and push Docker image with branch name
+          docker tag $IMAGE_NAME $IMAGE_ID:$BRANCH
+          docker push $IMAGE_ID:$BRANCH
+
+  sync-repos:
+    runs-on: ubuntu-latest
+    needs: push
+    if: success() || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_ed25519 
+
+      - name: Checkout source repo (dev branch)
+        uses: actions/checkout@v3
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Clone the target repo
+        run: |
+          git clone git@github.com:${{ inputs.TARGET_REPO }}.git target-repo
+
+      # - name: Copy files from source repo to target repo
+      #   run: |
+      #     cp -r $(ls -A) target-repo/  
+
+      - name: Check out the target branch
+        run: |
+          cd target-repo
+          git fetch origin
+          git checkout ${{ inputs.TARGET_BRANCH }} || git checkout -b ${{ inputs.TARGET_BRANCH }}
+          # git pull origin ${{ inputs.TARGET_BRANCH }}
+
+      - name: Sync changes from source repo to target repo
+        run: |
+          cd target-repo
+          rsync -av --exclude '.git' --exclude 'target-repo' ../ ./
+          
+          git config user.name "trustme-devops"
+          git config user.email "devops@trustme.ai"
+          git status
+
+          # Add all changes to the staging area
+          git add . 
+          
+          # Commit the changes
+          git commit -m "Sync changes from test-trustme" || echo "No changes to commit"
+          
+          git remote set-url origin git@github.com:${{ inputs.TARGET_REPO }}.git
+          git remote -v  # Verify remote URL
+
+      - name: Push changes to target repo
+        run: |
+          cd target-repo
+          git push origin ${{ inputs.TARGET_BRANCH }}
